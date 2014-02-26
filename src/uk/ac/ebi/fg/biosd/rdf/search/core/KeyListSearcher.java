@@ -77,7 +77,7 @@ public class KeyListSearcher
 					
 					// keys listed at the end by the user are presumably less important, so penalise them via this score decay 
 					// factor
-					decayFactor *= 0.1;
+					decayFactor *= 0.98;
 				}
 			} // keys loop
 		} // searcher loop

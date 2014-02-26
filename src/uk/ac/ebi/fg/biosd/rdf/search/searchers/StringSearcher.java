@@ -5,8 +5,6 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.management.RuntimeErrorException;
-
 import uk.ac.ebi.fg.biosd.rdf.search.core.KeySearcher;
 import uk.ac.ebi.fg.biosd.rdf.search.core.SearchKey;
 import uk.ac.ebi.fg.biosd.rdf.search.core.SearchResult;
@@ -29,30 +27,29 @@ public class StringSearcher extends KeySearcher
 	@Override
 	public Map<URI, SearchResult> search ( SearchKey key, int offset, int limit )
 	{
-		
-		// TODO: Import Jena in the project and then write a code similar to 
-		// http://opentox.org/data/documents/development/RDF%20files/JavaOnly/query-reasoning-with-jena-and-sparql
-		
-		// For the moment, it returns a mock-up test result
-		Map<URI, SearchResult> results = new HashMap<URI, SearchResult> ();
-		
 		try
 		{
-			SearchResult result = new SearchResult ( new URI ( "http://foo/uri/to/sample1" ), "Sample 1", 100.0 );
+			// TODO: Import Jena in the project and then write a code similar to 
+			// http://opentox.org/data/documents/development/RDF%20files/JavaOnly/query-reasoning-with-jena-and-sparql
+			
+			// For the moment, it returns a mock-up test result
+			Map<URI, SearchResult> results = new HashMap<URI, SearchResult> ();
+		
+			SearchResult result = new SearchResult ( new URI ( "http://foo/uri/to/sample1" ), "Sample 1", 1.0 );
 			results.put ( result.getUri (), result );
 			
-			result = new SearchResult ( new URI ( "http://foo/uri/to/sample2" ), "Sample 3", 80.0 );
+			result = new SearchResult ( new URI ( "http://foo/uri/to/sample2" ), "Sample 3", 0.8 );
 			results.put ( result.getUri (), result );
 
-			result = new SearchResult ( new URI ( "http://foo/uri/to/sample3" ), "Sample 3", 80.0 );
+			result = new SearchResult ( new URI ( "http://foo/uri/to/sample3" ), "Sample 3", 0.8 );
 			results.put ( result.getUri (), result );
 
+			return results;
 		} 
 		catch ( URISyntaxException ex )
 		{
 			throw new RuntimeException ( "Problem with the ttring-based searcher: " + ex.getMessage (), ex );
 		}
-		
 	}
 
 }
