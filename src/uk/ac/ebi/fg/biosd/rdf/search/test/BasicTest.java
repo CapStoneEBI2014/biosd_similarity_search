@@ -26,6 +26,9 @@ public class BasicTest
    * java -jar &lt;project-binary.jar&gt; BasicTest
    * 
    */
+	
+/* added new comments */
+	
 	public static void main ( String[] args )
 	{
 		// Prepare a list testing search keys 
