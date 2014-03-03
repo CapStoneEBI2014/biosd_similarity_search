@@ -50,11 +50,14 @@ public class StringSearcher extends KeySearcher
 		{
 			// TODO: Import Jena in the project and then write a code similar to 
 			// http://opentox.org/data/documents/development/RDF%20files/JavaOnly/query-reasoning-with-jena-and-sparql
-			
 		 
+			 //Print out Keys for testing
+			 //System.out.println("The element #1 Type is: " + key.getType());
+			 //System.out.println("The element #1 Vaue is: " + key.getValue());
+			 
 
-				
-			
+			 
+			 
 			
 			// For the moment, it returns a mock-up test result
 			Map<URI, SearchResult> results = new HashMap<URI, SearchResult> ();
@@ -65,8 +68,8 @@ public class StringSearcher extends KeySearcher
 		
 			//------------------------------------------------------------------
 			
-			    String parmType =  "^organism$";
-			    String parmLabel =  ".*sapiens.*";
+			    String paramType =  "^"   + key.getType()  + "$";
+			    String paramLabel =  ".*" + key.getValue() + ".*";
 			    String i =  "i";
 			    String queryStr;
 			    
@@ -90,9 +93,10 @@ public class StringSearcher extends KeySearcher
 			             + "?pv a ?pvType; "
 			             + "rdfs:label ?pvLabel. "
 			             + "?pvType  rdfs:label ?propTypeLabel. "
-			             + "FILTER ( REGEX ( STR ( ?propTypeLabel ), " +(char)34+  parmType  +(char)34+  "," +(char)34+ i +(char)34+") ). "
-			             + "FILTER ( REGEX ( STR ( ?pvLabel  ), " +(char)34+  parmLabel  +(char)34+  "," +(char)34+ i +(char)34+") ).}";
-			      
+			             + "FILTER ( REGEX ( STR ( ?propTypeLabel ), " +(char)34+  paramType  +(char)34+  "," +(char)34+ i +(char)34+") ). "
+			             + "FILTER ( REGEX ( STR ( ?pvLabel  ), " +(char)34+  paramLabel  +(char)34+  "," +(char)34+ i +(char)34+") ). }";
+			            
+			         
 			    
 			    
 			              
