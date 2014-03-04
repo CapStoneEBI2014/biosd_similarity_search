@@ -59,14 +59,15 @@ public class StringSearcher extends KeySearcher
 			// For the moment, it returns a mock-up test result
 			Map<URI, SearchResult> results = new HashMap<URI, SearchResult> ();
 		
+			//empty res, what for
 			SearchResult result = new SearchResult ( new URI ( "" ), "", 0 );
 			results.put ( result.getUri (), result );
 			
 		
 			//------------------------------------------------------------------
-			
-			    String parmType =  "^organism$";
-			    String parmLabel =  ".*sapiens.*";
+
+			String parmType = key.getType();
+			String parmLabel = key.getValue();
 			    String i =  "i";
 			    String queryStr;
 			    
