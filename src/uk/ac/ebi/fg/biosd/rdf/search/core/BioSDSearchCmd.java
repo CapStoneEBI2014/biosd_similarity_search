@@ -1,11 +1,7 @@
 package uk.ac.ebi.fg.biosd.rdf.search.core;
 
-import uk.ac.ebi.fg.biosd.rdf.search.searchers.OntologyTermExpander;
-
 import java.net.URI;
 import java.util.*;
-
-import static java.lang.System.out;
 
 public class BioSDSearchCmd {
 
@@ -32,12 +28,13 @@ public class BioSDSearchCmd {
 		Map<URI, SearchResult> samples = engine.search ( keys, 0, 10 );
 		
 		// Show the results
-		for ( SearchResult result: samples.values () )
+        Collection<SearchResult> resultValues = samples.values();
+		for ( SearchResult result: resultValues )
 		{
-			out.println ( "Sample URI: " + result.getUri () + ", Label: " + result.getLabel () + ", score: " + result.getScore () );
-            if(result.getUri() != null && result.getUri().getPath() != "") {
-                List score = new OntologyTermExpander().getMoreTerms(result.getUri(), 1);
-            }
+//			out.println ( "Sample URI: " + result.getUri () + ", Label: " + result.getLabel () + ", score: " + result.getScore () );
+//            if(result.getUri() != null && result.getUri().getPath() != "") {
+//                List score = new OntologyTermExpander().getMoreTerms(result.getUri(), 1);
+//            }
 		}
 	}
 

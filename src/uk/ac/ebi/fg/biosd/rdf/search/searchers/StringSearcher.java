@@ -1,32 +1,15 @@
 package uk.ac.ebi.fg.biosd.rdf.search.searchers;
 
-import java.io.Console;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.LinkedList;
-
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSetFormatter;
-import com.hp.hpl.jena.query.QueryExecution.*;
-import com.hp.hpl.jena.query.ResultSetFormatter.*;
-import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
-import com.hp.hpl.jena.sparql.resultset.*;  
-import com.hp.hpl.jena.query.QueryExecutionFactory;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-
+import com.hp.hpl.jena.query.*;
 import uk.ac.ebi.fg.biosd.rdf.search.core.KeySearcher;
 import uk.ac.ebi.fg.biosd.rdf.search.core.SearchKey;
 import uk.ac.ebi.fg.biosd.rdf.search.core.SearchResult;
+import uk.ac.ebi.fg.biosd.rdf.search.util.SemanticUtils;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Does a sample search based on an input pair of sample attribute value and type (like "homo sapiens"/"organism").
@@ -50,11 +33,6 @@ public class StringSearcher extends KeySearcher
 		{
 			// TODO: Import Jena in the project and then write a code similar to 
 			// http://opentox.org/data/documents/development/RDF%20files/JavaOnly/query-reasoning-with-jena-and-sparql
-			
-		 
-
-				
-			
 			
 			// For the moment, it returns a mock-up test result
 			Map<URI, SearchResult> results = new HashMap<URI, SearchResult> ();
@@ -99,26 +77,19 @@ public class StringSearcher extends KeySearcher
 			              
 			    
 			    	     
-			    	       query=QueryFactory.create(queryStr);
-			    	       // query = QueryFactory.create(queryStr);
+			    	       query = QueryFactory.create(queryStr);
 			    	        // Remote execution.
 			    	        QueryExecution qexec = QueryExecutionFactory.sparqlService(service, query);
-			
-			    	    
-			    	        final ResultSet rset = qexec.execSelect()  ;
-			    	        //ResultSetFormatter.out( rset );
+
+
+			    	        final ResultSet rset = qexec.execSelect();
 
 			    	        while(rset.hasNext()){
-			    	        	 QuerySolution s =rset.nextSolution();
-			    	        	 RDFNode z = s.get("?propTypeLabel");
-			    	        	 RDFNode y = s.get("?pvLabel");
-			    	        	 String rdsy = y.toString();
-			    	        	 String rdsz = z.toString();
-			    	        	 rdsy = rdsy.substring(0, rdsy.indexOf("^")); //line 4  
-			    	        	 rdsz = rdsz.substring(0, rdsz.indexOf("^")); //line 4  
-
-			    	        	result = new SearchResult ( new URI ( s.getResource("?smp").toString() ),rdsz + "-" + rdsy , 0.8 );
-			    				results.put ( result.getUri (), result );
+			    	        	 QuerySolution s = rset.nextSolution();
+                                result = SemanticUtils.getResultFromQuerySolution(s);
+			    				if(result != null) {
+                                    results.put( result.getUri (), result);
+                                }
 			    	        	 
 			    	           } 
 
