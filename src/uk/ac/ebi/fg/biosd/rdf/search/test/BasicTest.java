@@ -1,5 +1,7 @@
 package uk.ac.ebi.fg.biosd.rdf.search.test;
 
+import static java.lang.System.out;
+
 import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,7 +10,6 @@ import java.util.Map;
 import uk.ac.ebi.fg.biosd.rdf.search.core.SearchEngine;
 import uk.ac.ebi.fg.biosd.rdf.search.core.SearchKey;
 import uk.ac.ebi.fg.biosd.rdf.search.core.SearchResult;
-import static java.lang.System.out;
 
 /**
  * A parameter-less command line that tests the {@link SearchEngine}. 

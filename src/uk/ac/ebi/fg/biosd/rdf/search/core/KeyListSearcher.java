@@ -1,13 +1,13 @@
 package uk.ac.ebi.fg.biosd.rdf.search.core;
 
-import uk.ac.ebi.fg.biosd.rdf.search.searchers.OntologyExpansionSearcher;
-import uk.ac.ebi.fg.biosd.rdf.search.searchers.StringSearcher;
-
 import java.net.URI;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import uk.ac.ebi.fg.biosd.rdf.search.searchers.OntologyExpansionSearcher;
+import uk.ac.ebi.fg.biosd.rdf.search.searchers.StringSearcher;
 
 /**
  * Searches samples based on configured searchers and a list of input search keys. See {@link #search(List, int, int)} 

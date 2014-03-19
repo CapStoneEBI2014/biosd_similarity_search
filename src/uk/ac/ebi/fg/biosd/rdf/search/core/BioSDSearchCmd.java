@@ -1,7 +1,12 @@
 package uk.ac.ebi.fg.biosd.rdf.search.core;
 
 import java.net.URI;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class BioSDSearchCmd {
 
