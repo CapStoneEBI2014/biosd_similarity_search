@@ -28,21 +28,22 @@ public class OntologyTermExpander
 		String service = "http://www.ebi.ac.uk/rdf/services/biosamples/sparql";
 		
 		// Create a new query
-    String queryStr = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
-        + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
-        + "PREFIX owl: <http://www.w3.org/2002/07/owl#>"
-        + "PREFIX dc: <http://purl.org/dc/elements/1.1/>"
-        + "PREFIX dcterms: <http://purl.org/dc/terms/>"
-        + "PREFIX obo: <http://purl.obolibrary.org/obo/>"
-        + "PREFIX efo: <http://www.ebi.ac.uk/efo/>"
-        + "PREFIX biosd-terms: <http://rdf.ebi.ac.uk/terms/biosd/>"
-        + "PREFIX pav: <http://purl.org/pav/2.0/>"
-        + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
-        + "PREFIX sio: <http://semanticscience.org/resource/>"
-        +"select ?uri "+
-                "where { "+
-                "?uri rdfs:subClassOf <"+termURI+">  "+
-                "} \n ";
+    String queryStr = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
+        + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+        + "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
+        + "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n"
+        + "PREFIX dcterms: <http://purl.org/dc/terms/>\n"
+        + "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"
+        + "PREFIX efo: <http://www.ebi.ac.uk/efo/>\n"
+        + "PREFIX biosd-terms: <http://rdf.ebi.ac.uk/terms/biosd/>\n"
+        + "PREFIX pav: <http://purl.org/pav/2.0/>\n"
+        + "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"
+        + "PREFIX sio: <http://semanticscience.org/resource/>\n"
+        +"select ?uri \n"
+	      + "where { \n"
+	      + "?uri rdfs:subClassOf <"+termURI+">.\n"
+	      +  "FILTER ( !CONTAINS ( STR ( ?uri ), 'http://rdf.ebi.ac.uk/resource/biosamples/exp-prop-type/' ) ).\n" 
+	      +  "}";
 
 		System.out.println ( queryStr );
 		Query query = QueryFactory.create ( queryStr );

@@ -53,6 +53,10 @@ public class SearchResult
 	{
 		this.score = score;
 	}
-	
-	
+
+	@Override
+	public String toString ()
+	{
+		return "SearchResult [getUri()=" + getUri () + ", getLabel()=" + getLabel () + ", getScore()=" + getScore () + "]";
+	}
 }
