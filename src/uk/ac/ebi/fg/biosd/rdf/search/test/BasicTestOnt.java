@@ -21,7 +21,7 @@ public class BasicTestOnt
 	  OntologyTermExpander expander = new OntologyTermExpander ();
 	  URI uri = new URI("http://purl.org/obo/owl/NCBITaxon#NCBITaxon_10088");
 	
-	  List<SearchResult> results = expander.getMoreTerms ( uri, 0.7 );
+	  List<SearchResult> results = expander.getMoreTerms ( uri, 1.0 );
 	  for ( SearchResult result: results )
 	  	System.out.println ( result );
 	}

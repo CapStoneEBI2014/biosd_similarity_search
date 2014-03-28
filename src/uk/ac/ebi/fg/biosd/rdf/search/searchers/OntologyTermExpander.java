@@ -41,8 +41,7 @@ public class OntologyTermExpander
         + "PREFIX sio: <http://semanticscience.org/resource/>\n"
         +"select ?uri \n"
 	      + "where { \n"
-	      + "?uri rdfs:subClassOf <"+termURI+">.\n"
-	      +  "FILTER ( !CONTAINS ( STR ( ?uri ), 'http://rdf.ebi.ac.uk/resource/biosamples/exp-prop-type/' ) ).\n" 
+	      + "  ?uri rdfs:subClassOf <"+termURI+">.\n"
 	      +  "}";
 
 		System.out.println ( queryStr );
