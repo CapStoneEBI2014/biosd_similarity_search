@@ -74,8 +74,8 @@ public class KeyListSearcher
 						allResults.put ( thisResult.getUri (), thisResult );
 					}
 					else 
-					// add the current (decayed) score to the previous accumulated score of the already existing sample 
-					globalResult.setScore ( globalResult.getScore () + thisResult.getScore () * decayFactor  );
+						// add the current (decayed) score to the previous accumulated score of the already existing sample 
+						globalResult.setScore ( globalResult.getScore () + thisResult.getScore () * decayFactor  );
 					
 					// keys listed at the end by the user are presumably less important, so penalise them via this score decay 
 					// factor
