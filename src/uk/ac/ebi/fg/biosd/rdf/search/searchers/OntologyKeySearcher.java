@@ -1,4 +1,4 @@
-Enter file contents herepackage uk.ac.ebi.fg.biosd.rdf.search.searchers;
+package uk.ac.ebi.fg.biosd.rdf.search.searchers;
 
 import java.net.URI;
 import java.util.HashMap;
