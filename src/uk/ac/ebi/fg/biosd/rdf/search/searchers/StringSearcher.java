@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import uk.ac.ebi.fg.biosd.rdf.search.core.KeySearcher;
 import uk.ac.ebi.fg.biosd.rdf.search.core.SearchKey;
 import uk.ac.ebi.fg.biosd.rdf.search.core.SearchResult;
 import uk.ac.ebi.fg.biosd.rdf.search.util.SemanticUtils;
@@ -48,42 +47,34 @@ public class StringSearcher extends KeySearcher
 
 		Query query;
 		String queryStr =
-	    	"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
-			+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
-			+ "PREFIX owl: <http://www.w3.org/2002/07/owl#>"
-			+ "PREFIX dc: <http://purl.org/dc/elements/1.1/>"
-			+ "PREFIX dcterms: <http://purl.org/dc/terms/>"
-			+ "PREFIX obo: <http://purl.obolibrary.org/obo/>"
-			+ "PREFIX efo: <http://www.ebi.ac.uk/efo/>"
-			+ "PREFIX biosd-terms: <http://rdf.ebi.ac.uk/terms/biosd/>"
-			+ "PREFIX pav: <http://purl.org/pav/2.0/>"
-			+ "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
-			+ "PREFIX sio: <http://semanticscience.org/resource/>"
+	    	"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
+			+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+			+ "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"
+			+ "PREFIX biosd-terms: <http://rdf.ebi.ac.uk/terms/biosd/>\n"
 			+ ""
-			+ "#"
-			+ "## Samples with a given property value and type, selects the sample URI and label"
-			+ "#"
-			+ "SELECT DISTINCT ?smp ?smpLabelStr"
-			+ "WHERE {"
-			+ "  ?smp"
-			+ "    a biosd-terms:Sample;"
-			+ "    rdfs:label ?smpLabel;"
-			+ "    biosd-terms:has-bio-characteristic|obo:IAO_0000136 ?pv. # is about"
+			+ "SELECT DISTINCT ?smp ?smpLabelStr\n"
+			+ "WHERE {\n"
+			+ "  ?smp\n"
+			+ "    a biosd-terms:Sample;\n"
+			+ "    rdfs:label ?smpLabel;\n"
+			+ "    biosd-terms:has-bio-characteristic|obo:IAO_0000136 ?pv. # is about\n"
 			+ ""
-			+ "  ?pv"
-			+ "    a ?pvType;"
-			+ "    rdfs:label ?pvLabel."
+			+ "  ?pv\n"
+			+ "    a ?pvType;\n"
+			+ "    rdfs:label ?pvLabel.\n"
 			+ ""
-			+ "  ?pvType"
-			+ "    rdfs:label ?propTypeLabel."
+			+ "  ?pvType\n"
+			+ "    rdfs:label ?propTypeLabel.\n"
 			+ ""
-			+ "  FILTER ( REGEX ( STR ( ?propTypeLabel ), \"" + parmType + "\", \"i\" ) )."
-			+ "  FILTER ( REGEX ( STR ( ?pvLabel ), \"" + parmLabel + "\", \"i\" ) )."
+			+ "  FILTER ( REGEX ( STR ( ?propTypeLabel ), \"" + parmType + "\", \"i\" ) ).\n"
+			+ "  FILTER ( REGEX ( STR ( ?pvLabel ), \"" + parmLabel + "\", \"i\" ) ).\n"
 			+ ""
-			+ "  BIND ( STR ( ?smpLabel ) AS ?smpLabelStr ) # removes the language annotation"
+			+ "  BIND ( STR ( ?smpLabel ) AS ?smpLabelStr ) \n"
 			+ "}";
-		
-		query = QueryFactory.create ( queryStr );
+
+        System.out.println(queryStr);
+
+        query = QueryFactory.create ( queryStr );
 		// Remote execution.
 		QueryExecution qexec = QueryExecutionFactory.sparqlService ( service, query );
 

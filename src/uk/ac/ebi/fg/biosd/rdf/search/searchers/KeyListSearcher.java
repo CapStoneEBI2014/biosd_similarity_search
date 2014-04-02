@@ -1,4 +1,4 @@
-package uk.ac.ebi.fg.biosd.rdf.search.core;
+package uk.ac.ebi.fg.biosd.rdf.search.searchers;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -6,8 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import uk.ac.ebi.fg.biosd.rdf.search.searchers.OntologyExpansionSearcher;
-import uk.ac.ebi.fg.biosd.rdf.search.searchers.StringSearcher;
+import uk.ac.ebi.fg.biosd.rdf.search.core.SearchKey;
+import uk.ac.ebi.fg.biosd.rdf.search.core.SearchResult;
 
 /**
  * Searches samples based on configured searchers and a list of input search keys. See {@link #search(List, int, int)} 
@@ -19,7 +19,7 @@ import uk.ac.ebi.fg.biosd.rdf.search.searchers.StringSearcher;
 public class KeyListSearcher
 {
 	/**
-	 * The list of specific {@link KeySearcher key searchers} to be used in {@link #search(List, int, int)}. 
+	 * The list of specific {@link KeySearcher key searchers} to be used in {@link #search(List, int, int)}.
 	 * For the moment it contains {@link StringSearcher} only.
 	 */
 	private List<KeySearcher> searchers = null;
@@ -31,7 +31,7 @@ public class KeyListSearcher
 	{
 		searchers = new LinkedList<KeySearcher> ();
 		searchers.add ( new StringSearcher () );
-        searchers.add(new OntologyExpansionSearcher());
+        searchers.add ( new OntologyExpansionSearcher() );
 	}
 
 
@@ -42,7 +42,7 @@ public class KeyListSearcher
 	 * @param offset where the search windows starts (allows to pick results with a paging-like mechanism)
 	 * @param limit how many results the search window contains (allows to pick results with a paging-like mechanism)
 	 * 
-	 * @return a map structure, which, for each sample URI, gives the corresponding {@link SearchResult} describing 
+	 * @return a map structure, which, for each sample URI, gives the corresponding {@link uk.ac.ebi.fg.biosd.rdf.search.core.SearchResult} describing
 	 * such found sample. It is useful to represent such results as a map, cause that ease the implementation of this method
 	 * and the use of search results in other applications.
 	 */

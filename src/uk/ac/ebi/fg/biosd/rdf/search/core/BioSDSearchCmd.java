@@ -1,5 +1,7 @@
 package uk.ac.ebi.fg.biosd.rdf.search.core;
 
+import uk.ac.ebi.fg.biosd.rdf.search.searchers.OntologyTermExpander;
+
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
@@ -37,9 +39,9 @@ public class BioSDSearchCmd {
 		for ( SearchResult result: resultValues )
 		{
 //			out.println ( "Sample URI: " + result.getUri () + ", Label: " + result.getLabel () + ", score: " + result.getScore () );
-//            if(result.getUri() != null && result.getUri().getPath() != "") {
-//                List score = new OntologyTermExpander().getMoreTerms(result.getUri(), 1);
-//            }
+            if(result.getUri() != null && result.getUri().getPath() != "") {
+                List score = new OntologyTermExpander().getMoreTerms(result.getUri(), 1);
+            }
 		}
 	}
 

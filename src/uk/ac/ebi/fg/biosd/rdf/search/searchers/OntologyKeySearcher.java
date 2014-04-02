@@ -1,10 +1,9 @@
-Enter file contents herepackage uk.ac.ebi.fg.biosd.rdf.search.searchers;
+package uk.ac.ebi.fg.biosd.rdf.search.searchers;
 
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import uk.ac.ebi.fg.biosd.rdf.search.core.KeySearcher;
 import uk.ac.ebi.fg.biosd.rdf.search.core.SearchKey;
 import uk.ac.ebi.fg.biosd.rdf.search.core.SearchResult;
 import uk.ac.ebi.fg.biosd.rdf.search.util.SemanticUtils;
