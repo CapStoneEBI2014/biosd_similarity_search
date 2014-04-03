@@ -6,7 +6,7 @@ import java.util.Map;
 import uk.ac.ebi.fg.biosd.rdf.search.searchers.StringSearcher;
 
 /**
- * An abstract searcher that models the idea of taking a {@link SearchKey search attribute pair} and returning some 
+ * An abstract searcher that models the idea of taking a {@link uk.ac.ebi.fg.biosd.rdf.search.core.SearchKey search attribute pair} and returning some
  * samples relevant to the search key.
  *
  * <dl><dt>date</dt><dd>26 Feb 2014</dd></dl>

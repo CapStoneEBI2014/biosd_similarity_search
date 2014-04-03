@@ -1,5 +1,7 @@
 package uk.ac.ebi.fg.biosd.rdf.search.core;
 
+import uk.ac.ebi.fg.biosd.rdf.search.core.KeyListSearcher;
+
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +16,7 @@ import java.util.Map;
 public class SearchEngine
 {
 	/**
-	 * In the current version, just invokes the {@link KeyListSearcher}. Possible future developments (e.g., pre/post processing
+	 * In the current version, just invokes the {@link uk.ac.ebi.fg.biosd.rdf.search.searchers.KeyListSearcher}. Possible future developments (e.g., pre/post processing
 	 * of search parameters and search results) will be put here.
 	 * 
 	 * @param offset where the search windows starts (allows to pick results with a paging-like mechanism)

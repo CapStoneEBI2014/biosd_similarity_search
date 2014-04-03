@@ -1,6 +1,7 @@
 package uk.ac.ebi.fg.biosd.rdf.search.searchers;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.Map;
 
 import uk.ac.ebi.fg.biosd.rdf.search.core.KeySearcher;
@@ -14,6 +15,6 @@ public class OntologyExpansionSearcher extends KeySearcher{
     @Override
     public Map<URI, SearchResult> search(SearchKey key, int offset, int limit) {
         //TODO: implement calls to OntologyTermExpander and OntologyKeySearcher
-        return null;
+        return Collections.emptyMap();
     }
 }
