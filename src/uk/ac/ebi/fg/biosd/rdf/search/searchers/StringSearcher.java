@@ -41,47 +41,51 @@ public class StringSearcher extends KeySearcher
 
 		// ------------------------------------------------------------------
 
-		String parmType = key.getType ();
-		String parmLabel = key.getValue ();
+		String paramType = key.getType ();
+		String paramLabel = key.getValue ();
 
 		String service = "http://www.ebi.ac.uk/rdf/services/biosamples/sparql";
 
 		Query query;
 		String queryStr =
-	    	"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
-			+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
-			+ "PREFIX owl: <http://www.w3.org/2002/07/owl#>"
-			+ "PREFIX dc: <http://purl.org/dc/elements/1.1/>"
-			+ "PREFIX dcterms: <http://purl.org/dc/terms/>"
-			+ "PREFIX obo: <http://purl.obolibrary.org/obo/>"
-			+ "PREFIX efo: <http://www.ebi.ac.uk/efo/>"
-			+ "PREFIX biosd-terms: <http://rdf.ebi.ac.uk/terms/biosd/>"
-			+ "PREFIX pav: <http://purl.org/pav/2.0/>"
-			+ "PREFIX foaf: <http://xmlns.com/foaf/0.1/>"
-			+ "PREFIX sio: <http://semanticscience.org/resource/>"
-			+ ""
-			+ "#"
-			+ "## Samples with a given property value and type, selects the sample URI and label"
-			+ "#"
-			+ "SELECT DISTINCT ?smp ?smpLabelStr"
-			+ "WHERE {"
-			+ "  ?smp"
-			+ "    a biosd-terms:Sample;"
-			+ "    rdfs:label ?smpLabel;"
-			+ "    biosd-terms:has-bio-characteristic|obo:IAO_0000136 ?pv. # is about"
-			+ ""
-			+ "  ?pv"
-			+ "    a ?pvType;"
-			+ "    rdfs:label ?pvLabel."
-			+ ""
-			+ "  ?pvType"
-			+ "    rdfs:label ?propTypeLabel."
-			+ ""
-			+ "  FILTER ( REGEX ( STR ( ?propTypeLabel ), \"" + parmType + "\", \"i\" ) )."
-			+ "  FILTER ( REGEX ( STR ( ?pvLabel ), \"" + parmLabel + "\", \"i\" ) )."
-			+ ""
-			+ "  BIND ( STR ( ?smpLabel ) AS ?smpLabelStr ) # removes the language annotation"
-			+ "}";
+			// The query constraints the samples to have an external web entry attached. This improves the speed and 
+			// makes sense.
+			"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + 
+			"PREFIX dcterms: <http://purl.org/dc/terms/>\n" + 
+			"PREFIX obo: <http://purl.obolibrary.org/obo/>\n" + 
+			"PREFIX efo: <http://www.ebi.ac.uk/efo/>\n" + 
+			"PREFIX biosd-terms: <http://rdf.ebi.ac.uk/terms/biosd/>\n" + 
+			"PREFIX pav: <http://purl.org/pav/2.0/>\n" + 
+			"PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" + 
+			"PREFIX sio: <http://semanticscience.org/resource/>\n" + 
+			"SELECT DISTINCT ?smp ?smpLabelStr ?pvLabel ?propTypeLabel\n" +
+			"WHERE \n" +
+			"{\n" +
+			"  ?smp\n" +
+			"    a biosd-terms:Sample;\n" +
+			"    rdfs:label ?smpLabel;\n" +
+			"    biosd-terms:has-bio-characteristic | sio:SIO_000332 ?pv; # is about\n" +
+			"    pav:derivedFrom ?webRec.\n" +
+			"\n" +
+			"  ?pv\n" +
+			"    rdfs:label ?pvLabel;\n" +
+			"    biosd-terms:has-bio-characteristic-type ?pvType.\n" +
+			"  \n" +
+			"  ?pvType \n" +
+			"    rdfs:label ?propTypeLabel.\n" +
+			"\n" +
+			"\n" +
+			"  FILTER ( LCASE ( STR ( ?propTypeLabel ) ) = '" + paramType + "' ).\n" +
+			"  FILTER ( LCASE ( STR ( ?pvLabel ) ) = '" + paramLabel + "' ).\n" +
+			"\n" +
+			"  ?webRec\n" +
+			"    dcterms:identifier ?repoAcc;\n" +
+			"    dcterms:source ?repoName;\n" +
+			"    foaf:page ?repoUrl.\n" +
+			"\n" + 
+			"  BIND ( STR ( ?smpLabel ) AS ?smpLabelStr ) # removes the language annotation\n" +
+			"}\n";
+
 		
 		query = QueryFactory.create ( queryStr );
 		// Remote execution.

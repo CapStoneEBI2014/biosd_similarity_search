@@ -48,22 +48,25 @@ public class OntologyKeySearcher extends KeySearcher
 
 		Query query;
 		String queryStr =
-	    	"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
-			+ "PREFIX obo: <http://purl.obolibrary.org/obo/>"
-			+ "PREFIX biosd-terms: <http://rdf.ebi.ac.uk/terms/biosd/>"
-						+ ""
-			+ "#"
-			+ "## Samples with a given property value and type, selects the sample URI and label"
-			+ "#"
-			+ "SELECT DISTINCT ?smp ?smpLabel"
-			+ "{"
-			+ "  ?smp"
-			+ "    a biosd-terms:Sample;"
-			+ "    rdfs:label ?smpLabel;"
-			+ "    biosd-terms:has-bio-characteristic ?pv.  # is about"
-			+ ""
-			+ "   ?pv a obo:NCBITaxon_10090."
-			+ "}";
+	    	"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+			+ "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"
+			+ "PREFIX biosd-terms: <http://rdf.ebi.ac.uk/terms/biosd/>\n"
+			+ "\n"
+			+ "#\n"
+			+ "## Samples with a given property value and type, selects the sample URI and label\n"
+			+ "#\n"
+			+ "SELECT DISTINCT ?smp ?smpLabel\n"
+			+ "{\n"
+			+ "  ?smp\n"
+			+ "    a biosd-terms:Sample;\n"
+			+ "    rdfs:label ?smpLabel;\n"
+			+ "    biosd-terms:has-bio-characteristic ?pv.  # is about\n"
+			+ "\n"
+			+ "   ?pv biosd-terms:has-bio-characteristic-type ?pt.\n"
+			+ "   ?pt a ?ptClass.\n"
+			// '*' means an arbitrary chain of subClassOf (including a zero-length one)
+			+ "   ?ptClass rdfs:subClassOf* obo:NCBITaxon_10090.\n" 
+			+ "}\n";
 		
 		query = QueryFactory.create ( queryStr );
 		// Remote execution.

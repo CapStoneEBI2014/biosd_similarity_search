@@ -63,7 +63,7 @@ public class KeyListSearcher
 				// Get samples matching the search performed by current searcher and search key
 				Map<URI, SearchResult> searcherResults = searcher.search ( key, offset, limit );
 				// For each of such result
-				for ( SearchResult thisResult: searcherResults.values () )
+				if ( searcherResults != null ) for ( SearchResult thisResult: searcherResults.values () )
 				{
 					// Does the same sample already exist in the global results?
 					SearchResult globalResult = allResults.get ( thisResult.getUri () );
@@ -80,7 +80,7 @@ public class KeyListSearcher
 					// keys listed at the end by the user are presumably less important, so penalise them via this score decay 
 					// factor
 					decayFactor *= 0.98;
-				}
+				} // thisResult loop (and if)
 			} // keys loop
 		} // searcher loop
 		

@@ -3,13 +3,19 @@ package uk.ac.ebi.fg.biosd.rdf.search.test;
 import static java.lang.System.out;
 
 import java.net.URI;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.jena.atlas.lib.ArrayUtils;
+import org.apache.jena.atlas.lib.CollectionUtils;
+
 import uk.ac.ebi.fg.biosd.rdf.search.core.SearchEngine;
 import uk.ac.ebi.fg.biosd.rdf.search.core.SearchKey;
 import uk.ac.ebi.fg.biosd.rdf.search.core.SearchResult;
+import uk.ac.ebi.fg.biosd.rdf.search.util.MiscUtils;
 
 /**
  * A parameter-less command line that tests the {@link SearchEngine}. 
@@ -39,7 +45,7 @@ public class BasicTest
 		Map<URI, SearchResult> samples = engine.search ( keys, 0, 10 );
 		
 		// Show the results
-		for ( SearchResult result: samples.values () )
+		for ( SearchResult result: MiscUtils.sortSearchResult ( samples.values () ) )
 		{
 			out.println ( "Sample URI: " + result.getUri () + ", Label: " + result.getLabel () + ", score: " + result.getScore () );
 		}
