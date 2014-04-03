@@ -3,19 +3,16 @@ package uk.ac.ebi.fg.biosd.rdf.search.test;
 import static java.lang.System.out;
 
 import java.net.URI;
-import java.util.Arrays;
-import java.util.Comparator;
+import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.jena.atlas.lib.ArrayUtils;
-import org.apache.jena.atlas.lib.CollectionUtils;
+import java.util.Scanner;
 
 import uk.ac.ebi.fg.biosd.rdf.search.core.SearchEngine;
 import uk.ac.ebi.fg.biosd.rdf.search.core.SearchKey;
 import uk.ac.ebi.fg.biosd.rdf.search.core.SearchResult;
-import uk.ac.ebi.fg.biosd.rdf.search.util.MiscUtils;
+import uk.ac.ebi.fg.biosd.rdf.search.searchers.OntologyTermExpander;
 
 /**
  * A parameter-less command line that tests the {@link SearchEngine}. 
@@ -33,22 +30,51 @@ public class BasicTest
    * java -jar &lt;project-binary.jar&gt; BasicTest
    * 
    */
-	public static void main ( String[] args )
+	public static void main ( String[] args )  throws URISyntaxException
 	{
 		// Prepare a list testing search keys 
 		List<SearchKey> keys = new LinkedList<SearchKey> ();
-		keys.add ( new SearchKey ( "homo sapiens", "organism" ) );
-		keys.add ( new SearchKey ( "liver", "organism part" ) );
+		//keys.add ( new SearchKey ( "homo sapiens", "organism" ) );
+		//keys.add ( new SearchKey ( "liver", "organism part" ) );
 		
-		// Pass it to the search engine
+		OntologyTermExpander expander = new OntologyTermExpander ();
+		URI uri = new URI("http://purl.org/obo/owl/NCBITaxon#NCBITaxon_10088");
+		
+		String paramLable;
+		String paramType;
+	    String answer;
+		Scanner scan = new Scanner(System);
+	       // enter filtering criteria
+		
+		do {  
+	          System.out.print("Please enter SearchKey  Label :\n ");  
+	           paramLable = scan.nextLine();
+	           System.out.print("Please enter SearchKey Type:\n");  
+	           paramType = scan.nextLine();
+	           System.out.println("Do you want to add another SearchKey- y or n?");  
+	           answer = scan.nextLine();  
+	            }  
+	               while (answer.equals("y"));  
+	                 {  
+	                 keys.add ( new SearchKey ( paramLable,paramType ) );		  
+	                 System.out.println( "You Entered :" + paramLable + " , " + paramType );  
+	     
+	            } 
+		
+		 
+		
+		// Pass it to the search engines
 		SearchEngine engine = new SearchEngine ();
-		Map<URI, SearchResult> samples = engine.search ( keys, 0, 10 );
+	 	Map<URI, SearchResult> samples = engine.search ( keys, 0, 10 );
+	 	List<SearchResult> results = expander.getMoreTerms ( uri, 1.0 );
+	 	
+	 	//Combine results
+	 	results.addAll(samples.values ());
+	 		 	
+	     //print results
+	     for ( SearchResult result: results)
+		    	System.out.println ( result );
 		
-		// Show the results
-		for ( SearchResult result: MiscUtils.sortSearchResult ( samples.values () ) )
-		{
-			out.println ( "Sample URI: " + result.getUri () + ", Label: " + result.getLabel () + ", score: " + result.getScore () );
-		}
 	}
 
 }
