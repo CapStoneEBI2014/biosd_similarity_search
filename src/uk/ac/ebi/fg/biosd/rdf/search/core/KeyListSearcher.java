@@ -31,7 +31,7 @@ public class KeyListSearcher
 	{
 		searchers = new LinkedList<KeySearcher> ();
 		searchers.add ( new StringSearcher () );
-        searchers.add(new OntologyExpansionSearcher());
+    searchers.add(new OntologyExpansionSearcher());
 	}
 
 

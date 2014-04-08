@@ -37,13 +37,14 @@ public class BasicTest
 		//keys.add ( new SearchKey ( "homo sapiens", "organism" ) );
 		//keys.add ( new SearchKey ( "liver", "organism part" ) );
 		
+		
 		OntologyTermExpander expander = new OntologyTermExpander ();
 		URI uri = new URI("http://purl.org/obo/owl/NCBITaxon#NCBITaxon_10088");
 		
 		String paramLable;
 		String paramType;
 	    String answer;
-		Scanner scan = new Scanner(System);
+		Scanner scan = new Scanner(System.in);
 	       // enter filtering criteria
 		
 		do {  
