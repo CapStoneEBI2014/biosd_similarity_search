@@ -66,6 +66,13 @@ public class SearchKey
 	{
 		this.ontoTermURI = ontoTermURI;
 	}
-	
+
+
+
+	@Override
+	public String toString ()
+	{
+		return "SearchKey [getValue()=" + getValue () + ", getType()=" + getType () + ", getOntoTermURI()=" + getOntoTermURI () + "]";
+	}
 	
 }

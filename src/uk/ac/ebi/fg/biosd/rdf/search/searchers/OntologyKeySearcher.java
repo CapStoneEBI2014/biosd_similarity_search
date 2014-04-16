@@ -17,7 +17,7 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 
 /**
- * Does a sample search based on term").
+ * Search samples having attributes associated to a given ontology term.
  * 
  * <dl>
  * <dt>date</dt>
@@ -39,14 +39,13 @@ public class OntologyKeySearcher extends KeySearcher
 	{
 		Map<URI, SearchResult> results = new HashMap<URI, SearchResult> ();
 
-		// ------------------------------------------------------------------
+		// Does the parameter contain a URI? Returns an empty result if not 
+		URI ontoTermURI = key.getOntoTermURI ();
+		if ( ontoTermURI == null ) return results; 
 
-		String parmType = key.getType ();
-		String parmLabel = key.getValue ();
-
+		// Query for the samples having annotations that are instances of this term
+		//
 		String service = "http://www.ebi.ac.uk/rdf/services/biosamples/sparql";
-
-		Query query;
 		String queryStr =
 	    	"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
 			+ "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"
@@ -63,29 +62,22 @@ public class OntologyKeySearcher extends KeySearcher
 			+ "    biosd-terms:has-bio-characteristic ?pv.  # is about\n"
 			+ "\n"
 			+ "   ?pv biosd-terms:has-bio-characteristic-type ?pt.\n"
-			+ "   ?pt a ?ptClass.\n"
-			// '*' means an arbitrary chain of subClassOf (including a zero-length one)
-			+ "   ?ptClass rdfs:subClassOf* obo:NCBITaxon_10090.\n" 
-			+ "}\n";
+			+ "   ?pt a <" + ontoTermURI.toASCIIString () + ">.\n"
+			+ "} LIMIT " + limit + " OFFSET "+ offset + "\n";
 		
-		query = QueryFactory.create ( queryStr );
-		// Remote execution.
+		Query query = QueryFactory.create ( queryStr );
 		QueryExecution qexec = QueryExecutionFactory.sparqlService ( service, query );
 
-		final ResultSet rset = qexec.execSelect ();
-
+		// Collect the results
+		ResultSet rset = qexec.execSelect ();
 		while ( rset.hasNext () )
 		{
 			QuerySolution s = rset.nextSolution ();
+			// All with the same score level, nothing makes them different here.
 			SearchResult result = SemanticUtils.getResultFromQuerySolution ( s, "?smp", "?smpLabelStr", 1.0 );
 			if ( result != null )
-			{
 				results.put ( result.getUri (), result );
-			}
-
 		}
-
-		// -----------------------------------------------------------------
 
 		return results;
 	}

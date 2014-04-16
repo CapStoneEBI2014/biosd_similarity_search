@@ -44,9 +44,14 @@ public class StringSearcher extends KeySearcher
 		String paramType = key.getType ();
 		String paramLabel = key.getValue ();
 
+		// Empty result for null/empty strings
+		if ( paramType == null || paramType.length () == 0 || paramLabel == null || paramLabel.length () == 0 )
+			return results;
+		
 		String service = "http://www.ebi.ac.uk/rdf/services/biosamples/sparql";
 
-		Query query;
+		// All the samples annotated with an attribute value/type having these strings as labels.
+		
 		String queryStr =
 			// The query constraints the samples to have an external web entry attached. This improves the speed and 
 			// makes sense.
@@ -58,7 +63,7 @@ public class StringSearcher extends KeySearcher
 			"PREFIX pav: <http://purl.org/pav/2.0/>\n" + 
 			"PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" + 
 			"PREFIX sio: <http://semanticscience.org/resource/>\n" + 
-			"SELECT DISTINCT ?smp ?smpLabelStr ?pvLabel ?propTypeLabel\n" +
+			"SELECT DISTINCT ?smp ?smpLabelStr\n" +
 			"WHERE \n" +
 			"{\n" +
 			"  ?smp\n" +
@@ -84,10 +89,10 @@ public class StringSearcher extends KeySearcher
 			"    foaf:page ?repoUrl.\n" +
 			"\n" + 
 			"  BIND ( STR ( ?smpLabel ) AS ?smpLabelStr ) # removes the language annotation\n" +
-			"}\n";
+			"} LIMIT " + limit + " OFFSET "+ offset + "\n";
 
 		
-		query = QueryFactory.create ( queryStr );
+		Query query = QueryFactory.create ( queryStr );
 		// Remote execution.
 		QueryExecution qexec = QueryExecutionFactory.sparqlService ( service, query );
 
@@ -103,8 +108,6 @@ public class StringSearcher extends KeySearcher
 			}
 
 		}
-
-		// -----------------------------------------------------------------
 
 		return results;
 	}

@@ -7,7 +7,7 @@ import java.util.Comparator;
 import uk.ac.ebi.fg.biosd.rdf.search.core.SearchResult;
 
 /**
- * TODO: Comment me!
+ * Various utilities for the similarity search application.
  *
  * <dl><dt>date</dt><dd>3 Apr 2014</dd></dl>
  * @author Marco Brandizi
@@ -25,7 +25,6 @@ public class MiscUtils
 			@Override
 			public int compare ( SearchResult sr1, SearchResult sr2 )
 			{
-				// TODO Auto-generated method stub
 				return (int) - Math.signum ( sr1.getScore () - sr2.getScore () );
 			}
 		});

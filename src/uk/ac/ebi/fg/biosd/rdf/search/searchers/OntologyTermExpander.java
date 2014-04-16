@@ -15,27 +15,32 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 
 /**
- * Created by shakur on 13/03/2014.
+ * Expand an ontology term, using the SPARQL endpoint of an ontology service. Yelds semantically close terms, such as
+ * close subclasses or sibling.
+ * 
  */
 public class OntologyTermExpander
 {
 
 	public List<SearchResult> getMoreTerms ( URI termURI, double initialScore )
 	{
-
-		System.out.println ( " " );
-
-		String service = "http://www.ebi.ac.uk/rdf/services/biosamples/sparql";
+		// TODO: BioSD has only a few ontologies, we need to use Bioportal, pretty much the same way
+		// 
 		
-		// Create a new query
+		String service = "http://www.ebi.ac.uk/rdf/services/biosamples/sparql";
+		// TEST String service = "http://sparql.bioontology.org/ontologies/sparql/?apikey=c6ae1b27-9f86-4e3c-9dcf-087e1156eabe";
+		
+		// Fetch the subclasses of first level. TODO: a recursive search that goes down a few levels and decrease the 
+		// initial score based on the level
+		// 
     String queryStr =
-        "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
-        +"select ?uri \n"
-	      + "where { \n"
-	      + "  ?uri rdfs:subClassOf <"+termURI+">.\n"
-	      +  "}";
+	    "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+	    +"select distinct ?uri \n"
+	    + "where { \n"
+	    + "  ?uri rdfs:subClassOf <" + termURI + ">.\n"
+	    +  "}";
 
-		System.out.println ( queryStr );
+		// DEBUG System.out.println ( queryStr );
 		Query query = QueryFactory.create ( queryStr );
 
 		// Execute the query and obtain results
@@ -49,7 +54,7 @@ public class OntologyTermExpander
 		resultList.add ( new SearchResult ( termURI, null, initialScore ) );
 
 		// indirectly-related terms are a bit less relevant
-		initialScore *= 0.8;
+		initialScore *= 0.98;
 		
 		while ( results.hasNext () )
 		{

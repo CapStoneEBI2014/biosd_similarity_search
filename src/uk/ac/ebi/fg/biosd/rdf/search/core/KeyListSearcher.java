@@ -62,25 +62,36 @@ public class KeyListSearcher
 			{
 				// Get samples matching the search performed by current searcher and search key
 				Map<URI, SearchResult> searcherResults = searcher.search ( key, offset, limit );
+				
+				if ( searcherResults == null ) continue; // we've nothing to work with, let's go ahead
+				
 				// For each of such result
-				if ( searcherResults != null ) for ( SearchResult thisResult: searcherResults.values () )
+				for ( SearchResult thisResult: searcherResults.values () )
 				{
+					// Decrease the current score by a decay factor, which takes account of the search key position
+					double thisScore = thisResult.getScore () * decayFactor;
+
+					URI thisURI = thisResult.getUri ();
+					
 					// Does the same sample already exist in the global results?
-					SearchResult globalResult = allResults.get ( thisResult.getUri () );
+					SearchResult globalResult = allResults.get ( thisURI );
+					
 					if ( globalResult == null )
 					{
 						// if no, add it, after having decayed the score by the key-decaying factor
-						thisResult.setScore ( thisResult.getScore () * decayFactor  );
-						allResults.put ( thisResult.getUri (), thisResult );
+						thisResult.setScore ( thisScore  );
+						allResults.put ( thisURI, thisResult );
 					}
 					else 
 						// add the current (decayed) score to the previous accumulated score of the already existing sample 
-						globalResult.setScore ( globalResult.getScore () + thisResult.getScore () * decayFactor  );
+						globalResult.setScore ( globalResult.getScore () + thisScore  );
 					
-					// keys listed at the end by the user are presumably less important, so penalise them via this score decay 
-					// factor
-					decayFactor *= 0.98;
 				} // thisResult loop (and if)
+
+				// keys listed at the end by the user are presumably less important, so penalise them via this score decay 
+				// factor
+				decayFactor *= 0.98;
+
 			} // keys loop
 		} // searcher loop
 		

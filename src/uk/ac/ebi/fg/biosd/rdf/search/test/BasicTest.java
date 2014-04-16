@@ -7,12 +7,11 @@ import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 import uk.ac.ebi.fg.biosd.rdf.search.core.SearchEngine;
 import uk.ac.ebi.fg.biosd.rdf.search.core.SearchKey;
 import uk.ac.ebi.fg.biosd.rdf.search.core.SearchResult;
-import uk.ac.ebi.fg.biosd.rdf.search.searchers.OntologyTermExpander;
+import uk.ac.ebi.fg.biosd.rdf.search.util.MiscUtils;
 
 /**
  * A parameter-less command line that tests the {@link SearchEngine}. 
@@ -34,13 +33,11 @@ public class BasicTest
 	{
 		// Prepare a list testing search keys 
 		List<SearchKey> keys = new LinkedList<SearchKey> ();
-		//keys.add ( new SearchKey ( "homo sapiens", "organism" ) );
-		//keys.add ( new SearchKey ( "liver", "organism part" ) );
-		
-		
-		OntologyTermExpander expander = new OntologyTermExpander ();
-		URI uri = new URI("http://purl.org/obo/owl/NCBITaxon#NCBITaxon_10088");
-		
+		keys.add ( new SearchKey ( new URI ( "http://purl.org/obo/owl/NCBITaxon#NCBITaxon_10088" ) )); 
+		keys.add ( new SearchKey ( "thymus", "organism part" ) );
+		keys.add ( new SearchKey ( "male", "sex" ) );
+
+		/* TODO: to be moved on the final program, which needs to use ZOOMA as well
 		String paramLable;
 		String paramType;
 	    String answer;
@@ -62,20 +59,15 @@ public class BasicTest
 	     
 	            } 
 		
-		 
+		*/
 		
 		// Pass it to the search engines
 		SearchEngine engine = new SearchEngine ();
-	 	Map<URI, SearchResult> samples = engine.search ( keys, 0, 10 );
-	 	List<SearchResult> results = expander.getMoreTerms ( uri, 1.0 );
-	 	
-	 	//Combine results
-	 	results.addAll(samples.values ());
+	 	Map<URI, SearchResult> samples = engine.search ( keys, 0, 100 );
 	 		 	
-	     //print results
-	     for ( SearchResult result: results)
-		    	System.out.println ( result );
-		
+	  // Show the results
+	  for ( SearchResult result: MiscUtils.sortSearchResult ( samples.values () ))
+	  	out.println ( result );
 	}
 
 }
