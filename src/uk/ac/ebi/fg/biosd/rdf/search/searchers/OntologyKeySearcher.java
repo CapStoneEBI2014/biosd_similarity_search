@@ -54,7 +54,7 @@ public class OntologyKeySearcher extends KeySearcher
 			+ "#\n"
 			+ "## Samples with a given property value and type, selects the sample URI and label\n"
 			+ "#\n"
-			+ "SELECT DISTINCT ?smp ?smpLabel\n"
+			+ "SELECT DISTINCT ?smp ?smpLabelStr\n"
 			+ "{\n"
 			+ "  ?smp\n"
 			+ "    a biosd-terms:Sample;\n"
@@ -63,6 +63,7 @@ public class OntologyKeySearcher extends KeySearcher
 			+ "\n"
 			+ "   ?pv biosd-terms:has-bio-characteristic-type ?pt.\n"
 			+ "   ?pt a <" + ontoTermURI.toASCIIString () + ">.\n"
+			+ "   BIND ( STR ( ?smpLabel ) AS ?smpLabelStr ) # removes the language annotation\n"
 			+ "} LIMIT " + limit + " OFFSET "+ offset + "\n";
 		
 		Query query = QueryFactory.create ( queryStr );
