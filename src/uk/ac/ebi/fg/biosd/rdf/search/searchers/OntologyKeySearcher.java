@@ -64,7 +64,7 @@ public class OntologyKeySearcher extends KeySearcher
 			+ "   ?pv biosd-terms:has-bio-characteristic-type ?pt.\n"
 			+ "   ?pt a <" + ontoTermURI.toASCIIString () + ">.\n"
 			+ "   BIND ( STR ( ?smpLabel ) AS ?smpLabelStr ) # removes the language annotation\n"
-			+ "} LIMIT " + limit + " OFFSET "+ offset + "\n";
+			+ "} ORDER BY ?smpLabelStr LIMIT " + limit + " OFFSET "+ offset + "\n";
 		
 		Query query = QueryFactory.create ( queryStr );
 		QueryExecution qexec = QueryExecutionFactory.sparqlService ( service, query );

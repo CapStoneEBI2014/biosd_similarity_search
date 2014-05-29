@@ -2,6 +2,7 @@ package uk.ac.ebi.fg.biosd.rdf.search.searchers;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import uk.ac.ebi.fg.biosd.rdf.search.core.SearchResult;
@@ -24,52 +25,71 @@ public class OntologyTermExpander
 
 	public List<SearchResult> getMoreTerms ( URI termURI, double initialScore )
 	{
-		// TODO: BioSD has only a few ontologies, we need to use Bioportal, pretty much the same way
-		// 
+		return getSubClasses ( termURI, initialScore, 0, -1, new ArrayList<SearchResult> () );
+	}
+	
+	
+
+	/**
+	 * TODO: Comment me!
+	 * @param topTermURI
+	 * @param initialScore
+	 * @param currentLevel
+	 * @param maxLevel
+	 * @param collectedResults
+	 * @return
+	 */
+	private List<SearchResult> getSubClasses ( URI topTermURI, double initialScore, int currentLevel, int maxLevel, List<SearchResult> collectedResults )
+	{
 		
+		// First of all add the top term to the results
+		collectedResults.add ( new SearchResult ( topTermURI, null, initialScore ) );
+		System.out.println ( "Saved term: " + topTermURI );
+			
+		// Stop if we reached the max desired level (-1 means unlimited)
+		if ( maxLevel != -1 && currentLevel >= maxLevel ) return collectedResults; 
+			
+	  // else, go down the child terms
+			
 		String service = "http://www.ebi.ac.uk/rdf/services/biosamples/sparql";
-		// TEST String service = "http://sparql.bioontology.org/ontologies/sparql/?apikey=c6ae1b27-9f86-4e3c-9dcf-087e1156eabe";
+		//String service = "http://sparql.bioontology.org/ontologies/sparql/?apikey=07732278-7854-4c4f-8af1-7a80a1ffc1bb";
 		
-		// Fetch the subclasses of first level. TODO: a recursive search that goes down a few levels and decrease the 
-		// initial score based on the level
-		// 
-    String queryStr =
+		// Search for children of this term
+		String queryStr =
 	    "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
 	    +"select distinct ?uri \n"
 	    + "where { \n"
-	    + "  ?uri rdfs:subClassOf <" + termURI + ">.\n"
+	    + "  ?uri rdfs:subClassOf <" + topTermURI + ">.\n"
 	    +  "}";
 
 		// DEBUG System.out.println ( queryStr );
 		Query query = QueryFactory.create ( queryStr );
 
-		// Execute the query and obtain results
+		// Execute the query and obtain child term URIs
 		QueryExecution qe = QueryExecutionFactory.sparqlService ( service, query );
-		ResultSet results = qe.execSelect ();
+		ResultSet queryResults = qe.execSelect ();
 
-		List<SearchResult> resultList = new ArrayList<SearchResult> ();
+		List<URI> childTermURIs = new LinkedList<> ();
+		
+		while ( queryResults.hasNext () )
+		{
+			QuerySolution s = queryResults.nextSolution ();
+			// Again the second null makes it to ignore the term label
+			childTermURIs.add ( SemanticUtils.getURIFromQuerySolution ( s, "?uri" ) );
+		}
+		qe.close ();
 
-		// The top term is the most relevant
-		// We don't care about the term label, since these are used to search samples and never shown
-		resultList.add ( new SearchResult ( termURI, null, initialScore ) );
 
 		// indirectly-related terms are a bit less relevant
 		initialScore *= 0.98;
+		currentLevel--;
+
+		// Now go again through all the child terms, to recurse in breadth-first fashion (which might be needed in future, to
+		// stop expansion after a given number of terms
+		for ( URI childTermURI: childTermURIs )
+			getSubClasses ( childTermURI, initialScore, currentLevel, maxLevel, collectedResults );
 		
-		while ( results.hasNext () )
-		{
-			QuerySolution s = results.nextSolution ();
-			// Again the second null makes it to ignore the term label
-			SearchResult result = SemanticUtils.getResultFromQuerySolution ( s, "?uri", null, initialScore );
-			
-			if ( result != null )
-			{
-				resultList.add ( result );
-			}
-		}
-
-		qe.close ();
-
-		return resultList;
+		return collectedResults;
 	}
+
 }
