@@ -33,7 +33,9 @@ public class BasicTest
 	{
 		// Prepare a list testing search keys 
 		List<SearchKey> keys = new LinkedList<SearchKey> ();
-		keys.add ( new SearchKey ( new URI ( "http://purl.org/obo/owl/NCBITaxon#NCBITaxon_10088" ) )); 
+		keys.add ( new SearchKey ( new URI ( "http://purl.org/obo/owl/NCBITaxon#NCBITaxon_10088" ) ));
+		keys.add ( new SearchKey ( new URI ( "http://www.ebi.ac.uk/efo/EFO_0004000" ) ));
+		
 		//keys.add ( new SearchKey ( "thymus", "organism part" ) );
 		//keys.add ( new SearchKey ( "male", "sex" ) );
 
