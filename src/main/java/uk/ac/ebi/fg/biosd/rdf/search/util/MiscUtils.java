@@ -1,8 +1,10 @@
 package uk.ac.ebi.fg.biosd.rdf.search.util;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Map;
 
 import uk.ac.ebi.fg.biosd.rdf.search.core.SearchResult;
 
@@ -30,5 +32,26 @@ public class MiscUtils
 		});
 		
 		return result;
+	}
+	
+	/**
+	 * Add a search result to globalResults, if its {@link SearchResult#getUri() URI} doesn't exist yet in such map.
+	 * If it exists, adds up the existing score to the score of the new result.
+	 * 
+	 * This is the way of adding up search results normally used in the scorers.   
+	 */
+	public static boolean addSearchResult ( Map<URI, SearchResult> globalResults, SearchResult result )
+	{
+		SearchResult existingResult = globalResults.get ( result.getUri () );
+		if ( existingResult == null )
+		{
+			// I see this sample for the first time, let's add it to the results
+			globalResults.put ( result.getUri (), result );
+			return true;
+		}
+
+		// This sample is not new, let's sum up the current and the already existing (i.e. accumulated) score 
+		existingResult.setScore ( existingResult.getScore () + result.getScore () );
+		return false;
 	}
 }

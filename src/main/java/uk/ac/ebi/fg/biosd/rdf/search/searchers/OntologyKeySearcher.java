@@ -50,6 +50,7 @@ public class OntologyKeySearcher extends KeySearcher
 	    	"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
 			+ "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"
 			+ "PREFIX biosd-terms: <http://rdf.ebi.ac.uk/terms/biosd/>\n"
+			+ "PREFIX sio: <http://semanticscience.org/resource/>\n"
 			+ "\n"
 			+ "#\n"
 			+ "## Samples with a given property value and type, selects the sample URI and label\n"

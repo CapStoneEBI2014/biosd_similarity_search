@@ -60,6 +60,21 @@
 	    </exclusions>
 		</dependency>
 
+		<!-- The web service client for the ZOOMA tool -->
+		<dependency>
+      <groupId>uk.ac.ebi.fgpt</groupId>
+	    <artifactId>zooma-client</artifactId>
+	    <version>2.0-SNAPSHOT</version>
+	    <exclusions>
+	    	<!-- We use our own logger (see above) -->
+	    	<exclusion>
+	    		<artifactId>slf4j-log4j12</artifactId>
+	    		<groupId>org.slf4j</groupId>
+	    	</exclusion>
+	    </exclusions>
+		</dependency>		
+
+
 
 
 		<!-- TEST -->

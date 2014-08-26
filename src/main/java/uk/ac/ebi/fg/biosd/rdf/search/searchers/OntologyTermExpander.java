@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import uk.ac.ebi.fg.biosd.rdf.search.core.SearchResult;
 import uk.ac.ebi.fg.biosd.rdf.search.util.SemanticUtils;
 
@@ -18,8 +21,7 @@ import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-
-import static java.lang.System.out;
+import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 
 /**
  * Expand an ontology term, using the SPARQL endpoint of an ontology service. Yelds semantically close terms, such as
@@ -34,9 +36,15 @@ public class OntologyTermExpander
 	 */
 	private OntModel cache = ModelFactory.createOntologyModel ( OntModelSpec.OWL_MEM );
 	
+	private Logger log = LoggerFactory.getLogger ( this.getClass () );
+	
+	
 	public List<SearchResult> getMoreTerms ( URI termURI, double initialScore )
 	{
-		return getSubClasses ( termURI, initialScore, 0, -1, new ArrayList<SearchResult> () );
+		log.debug ( "Expanding <{}>", termURI );
+		List<SearchResult> result = getSubClasses ( termURI, initialScore, 0, -1, new ArrayList<SearchResult> () );
+		log.debug ( "Expansion of <{}> done, {} results", termURI, result == null ? "0 (null)" : "" + result.size () );
+		return result;
 	}
 	
 	
@@ -62,12 +70,7 @@ public class OntologyTermExpander
 		if ( maxLevel != -1 && currentLevel >= maxLevel ) return collectedResults; 
 			
 	  // else, go down the child terms
-			
-		String service = "http://www.ebi.ac.uk/rdf/services/biosamples/sparql";
-
-		// This is an API key associated to a BioSD user 
-		//String service = "http://sparql.bioontology.org/ontologies/sparql/?apikey=07732278-7854-4c4f-8af1-7a80a1ffc1bb";
-		
+					
 		// Search for children of this term
 		String queryStr =
 	    "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
@@ -76,7 +79,7 @@ public class OntologyTermExpander
 	    + "  ?uri rdfs:subClassOf <" + topTermURI + ">.\n"
 	    +  "}";
 
-		//DEBUG out.println ( queryStr );
+		log.trace ( "Doing: {}", queryStr );
 		Query query = QueryFactory.create ( queryStr );
 
 		// Execute the query and obtain child term URIs
@@ -84,9 +87,22 @@ public class OntologyTermExpander
 		OntClass cachedTerm = cache.getOntClass ( topTermURI.toASCIIString () );
 		// DEBUG if ( cachedTerm != null ) out.println ( "Cached term: " + topTermURI );
 
-		QueryExecution qe = cachedTerm != null
-			? QueryExecutionFactory.create ( query, cache ) 
-			: QueryExecutionFactory.sparqlService ( service, query );
+		QueryExecution qe;
+		
+		if ( cachedTerm != null ) 
+			qe = QueryExecutionFactory.create ( query, cache );
+		else 
+		{
+			// Bioportal, more complete, but slower
+			/*QueryEngineHTTP httpQe = QueryExecutionFactory.createServiceRequest ( "http://sparql.bioontology.org/ontologies/sparql", query );
+			// This is an API key associated to a BioSD user 
+			httpQe.addParam ( "apikey", "07732278-7854-4c4f-8af1-7a80a1ffc1bb" );
+			// httpQe.addParam ( "rules", "SUBC" );
+			qe = httpQe;*/
+			
+			// The ontologies in our endpoint, less complete, but faster
+			qe = QueryExecutionFactory.sparqlService ( "http://www.ebi.ac.uk/rdf/services/biosamples/sparql", query );
+		}
 		
 		ResultSet queryResults = qe.execSelect ();
 		List<URI> childTermURIs = new LinkedList<> ();

@@ -6,8 +6,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import uk.ac.ebi.fg.biosd.rdf.search.searchers.OntologyExpansionSearcher;
 import uk.ac.ebi.fg.biosd.rdf.search.searchers.StringSearcher;
+import uk.ac.ebi.fg.biosd.rdf.search.searchers.ZoomaSearcher;
+import uk.ac.ebi.fg.biosd.rdf.search.util.MiscUtils;
 
 /**
  * Searches samples based on configured searchers and a list of input search keys. See {@link #search(List, int, int)} 
@@ -30,7 +34,8 @@ public class KeyListSearcher
 	public KeyListSearcher ()
 	{
 		searchers = new LinkedList<KeySearcher> ();
-		searchers.add ( new StringSearcher () );
+		// searchers.add ( new StringSearcher () );
+    searchers.add ( new ZoomaSearcher () );
     searchers.add ( new OntologyExpansionSearcher() );
 	}
 
@@ -60,6 +65,9 @@ public class KeyListSearcher
 			// For each search key 
 			for ( SearchKey key: keys ) 
 			{
+				// Skip empty search keys
+				if ( key == null ) continue;
+				
 				// Get samples matching the search performed by current searcher and search key
 				Map<URI, SearchResult> searcherResults = searcher.search ( key, offset, limit );
 				
@@ -69,22 +77,10 @@ public class KeyListSearcher
 				for ( SearchResult thisResult: searcherResults.values () )
 				{
 					// Decrease the current score by a decay factor, which takes account of the search key position
-					double thisScore = thisResult.getScore () * decayFactor;
+					thisResult.setScore ( thisResult.getScore () * decayFactor );
 
-					URI thisURI = thisResult.getUri ();
-					
-					// Does the same sample already exist in the global results?
-					SearchResult globalResult = allResults.get ( thisURI );
-					
-					if ( globalResult == null )
-					{
-						// if no, add it, after having decayed the score by the key-decaying factor
-						thisResult.setScore ( thisScore  );
-						allResults.put ( thisURI, thisResult );
-					}
-					else 
-						// add the current (decayed) score to the previous accumulated score of the already existing sample 
-						globalResult.setScore ( globalResult.getScore () + thisScore  );
+					// Add the current result to the possibly already existing results.
+					MiscUtils.addSearchResult ( allResults, thisResult );
 					
 				} // thisResult loop (and if)
 

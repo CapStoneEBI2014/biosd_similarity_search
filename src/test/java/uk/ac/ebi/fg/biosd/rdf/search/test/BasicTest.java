@@ -31,9 +31,13 @@ public class BasicTest
 	{
 		// Prepare a list testing search keys 
 		List<SearchKey> keys = new LinkedList<SearchKey> ();
-		keys.add ( new SearchKey ( new URI ( "http://purl.org/obo/owl/NCBITaxon#NCBITaxon_10088" ) ));
-		keys.add ( new SearchKey ( new URI ( "http://www.ebi.ac.uk/efo/EFO_0004000" ) ));
 		
+		// Mus, which is then expanded to terms like  NCBITaxon_10090 (mus-musculus)
+		keys.add ( new SearchKey ( new URI ( "http://purl.obolibrary.org/obo/NCBITaxon_10088" ) ));
+		
+		// Should resolve to http://purl.obolibrary.org/obo/UBERON_0002371
+		keys.add ( new SearchKey ( "bone marrow", "organism part" ));
+
 		// Pass it to the search engines
 		SearchEngine engine = new SearchEngine ();
 	 	Map<URI, SearchResult> samples = engine.search ( keys, 0, 100 );

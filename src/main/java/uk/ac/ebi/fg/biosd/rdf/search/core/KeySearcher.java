@@ -6,7 +6,8 @@ import java.util.Map;
 import uk.ac.ebi.fg.biosd.rdf.search.searchers.StringSearcher;
 
 /**
- * An abstract searcher that models the idea of taking a {@link uk.ac.ebi.fg.biosd.rdf.search.core.SearchKey search attribute pair} and returning some
+ * An abstract searcher that models the idea of taking a 
+ * {@link uk.ac.ebi.fg.biosd.rdf.search.core.SearchKey search attribute pair} and returning some
  * samples relevant to the search key.
  *
  * <dl><dt>date</dt><dd>26 Feb 2014</dd></dl>
@@ -18,7 +19,8 @@ public abstract class KeySearcher
 	 * @return a map that, for each sample URI tells the sample label and a score that accounts how much the sample 
 	 * is relevant to the search key. It is convenient to return such result in the form of a map.
 	 * 
-	 * @param key the search key (e.g., new SearchKey ( "homo sapiens", "organism" )
+	 * @param key the search key (e.g., new SearchKey ( "homo sapiens", "organism" ). You should assume that the key
+	 * is not null, while checking the non-empty value of its components is left to the specific implementer. 
 	 * @param offset where the search windows starts (allows to pick results with a paging-like mechanism)
 	 * @param limit how many results the search window contains (allows to pick results with a paging-like mechanism)
    *

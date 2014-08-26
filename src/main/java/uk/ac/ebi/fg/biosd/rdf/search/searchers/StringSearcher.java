@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import uk.ac.ebi.fg.biosd.rdf.search.core.KeySearcher;
 import uk.ac.ebi.fg.biosd.rdf.search.core.SearchKey;
 import uk.ac.ebi.fg.biosd.rdf.search.core.SearchResult;
@@ -45,7 +47,7 @@ public class StringSearcher extends KeySearcher
 		String paramLabel = key.getValue ();
 
 		// Empty result for null/empty strings
-		if ( paramType == null || paramType.length () == 0 || paramLabel == null || paramLabel.length () == 0 )
+		if ( StringUtils.trimToNull ( paramType ) == null || StringUtils.trimToNull ( paramLabel ) == null )  
 			return results;
 		
 		String service = "http://www.ebi.ac.uk/rdf/services/biosamples/sparql";
@@ -103,10 +105,7 @@ public class StringSearcher extends KeySearcher
 			QuerySolution s = rset.nextSolution ();
 			SearchResult result = SemanticUtils.getResultFromQuerySolution ( s, "?smp", "?smpLabelStr", 1.0 );
 			if ( result != null )
-			{
 				results.put ( result.getUri (), result );
-			}
-
 		}
 
 		return results;
